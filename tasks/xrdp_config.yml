@@ -1,0 +1,126 @@
+---
+- name: add norwegian language support
+  copy:
+    src: xrdp/km-00000414.ini
+    dest: /etc/xrdp/km-00000414.ini
+    mode: 0644
+
+## xrdp_keyboard.ini
+
+- name: add norwegian to xrdp_keyboard.ini
+  ini_file:
+    path: /etc/xrdp/xrdp_keyboard.ini
+    section: '{{ item.s }}'
+    option: '{{ item.o }}'
+    value: '{{ item.v }}'
+    no_extra_spaces: true
+    mode: 0644
+  loop:
+    - s: 'default_rdp_layouts'
+      o: 'rdp_layout_no'
+      v: '0x00000414'
+    - s: 'default_layouts_map'
+      o: 'rdp_layout_no'
+      v: 'no'
+
+## sesman.ini
+
+- name: set idle timout
+  ini_file:
+    path: /etc/xrdp/sesman.ini
+    section: Sessions
+    option: MaxSessions
+    value: '{{ xrdp_server_max_sessions }}'
+    no_extra_spaces: true
+    mode: 0644
+
+- name: set idle timout
+  ini_file:
+    path: /etc/xrdp/sesman.ini
+    section: Sessions
+    option: IdleTimeLimit
+    value: '{{ xrdp_server_idle_timeout_seconds }}'
+    no_extra_spaces: true
+    mode: 0644
+
+- name: set disconnected timout
+  ini_file:
+    path: /etc/xrdp/sesman.ini
+    section: Sessions
+    option: IdleTimeLimit
+    value: '{{ xrdp_server_disconnected_timeout_seconds }}'
+    no_extra_spaces: true
+    mode: 0644
+
+- name: kill disconnected sessions
+  ini_file:
+    path: /etc/xrdp/sesman.ini
+    section: Sessions
+    option: KillDisconnected
+    value: '{{ "true" if xrdp_server_disconnected_timeout_seconds > 0 else "false" }}'
+    no_extra_spaces: true
+    mode: 0644
+
+- name: allow root login
+  ini_file:
+    path: /etc/xrdp/sesman.ini
+    section: Security
+    option: AllowRootLogin
+    value: '{{ xrdp_server_allow_root_login|lower }}'
+    no_extra_spaces: true
+    mode: 0644
+
+- name: restict outbound clipboard
+  ini_file:
+    path: /etc/xrdp/sesman.ini
+    section: Security
+    option: RestrictOutboundClipboard
+    value: '{{ xrdp_server_restrict_outbound_clipboard|lower }}'
+    no_extra_spaces: true
+    mode: 0644
+
+- name: check users against groups
+  ini_file:
+    path: /etc/xrdp/sesman.ini
+    section: Security
+    option: AlwaysGroupCheck
+    value: '{{ xrdp_server_group_check|lower }}'
+    no_extra_spaces: true
+    mode: 0644
+
+- name: set log level
+  ini_file:
+    path: /etc/xrdp/sesman.ini
+    section: Logging
+    option: '{{ item }}'
+    value: '{{ xrdp_server_loglevel|upper }}'
+    no_extra_spaces: true
+    mode: 0644
+  loop:
+    - LogLevel
+    - SyslogLevel
+
+## xrdp.ini
+
+- name: remove unused options
+  ini_file:
+    path: /etc/xrdp/xrdp.ini
+    section: '{{ item }}'
+    state: absent
+    mode: 0644
+  loop:
+    - neutrinordp-any
+    - vnc-any
+    - Xvnc
+
+- name: set log level
+  ini_file:
+    path: /etc/xrdp/xrdp.ini
+    section: Logging
+    option: '{{ item }}'
+    value: '{{ xrdp_server_loglevel|upper }}'
+    no_extra_spaces: true
+    mode: 0644
+  loop:
+    - LogLevel
+    - SyslogLevel

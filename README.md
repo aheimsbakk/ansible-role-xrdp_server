@@ -1,38 +1,41 @@
-Role Name
-=========
+# xrdp_server
 
-A brief description of the role goes here.
+Install XRDP server and prepare sharing a Linux desktop environment over RDP.
 
-Requirements
-------------
+## Requirements
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+* Ubuntu 20.04, Focal
 
-Role Variables
---------------
+## Role Variables
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+* `xrdp_server_desktop_environment` --- Which desktop environment to install, default `gnome`.
+    * `gnome` == The vanilla Gnome desktop environment
+* `xrdp_server_enable_sound` --- Enable sound redirect, default `true`.
+* `xrdp_server_disconnected_timeout_seconds` --- If `>0` then disconnected sessions will be killed, default `0`.
+* `xrdp_server_idle_timeout_seconds` --- If `>0` then disconnects session after idle time, default `0`.
+* `xrdp_server_loglevel` --- Set loglevel to core, error, warning, info or debug, default `warning`.
+* `xrdp_server_max_sessions` --- Maximum number of connected clients, default `10`.
 
-Dependencies
-------------
+Security related.
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+* `xrdp_server_allow_root_login` --- Allow graphical login for root, default `false`.
+* `xrdp_server_group_check` --- Check if user in `tsusers` or admin in `tsadmins`, default `false`.
+* `xrdp_server_restrict_outbound_clipboard` --- Allow graphical login for root, default `false`.
 
-Example Playbook
-----------------
+## Dependencies
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+None.
+
+## Example Playbook
 
     - hosts: servers
       roles:
          - { role: username.rolename, x: 42 }
 
-License
--------
+## License
 
-BSD
+GPL-2.0
 
-Author Information
-------------------
+## Author Informatiom
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Arnulf Heimsbakk

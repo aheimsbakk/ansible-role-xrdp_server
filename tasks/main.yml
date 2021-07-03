@@ -1,1 +1,23 @@
 ---
+- name: check if we're running supported os
+  assert:
+    fail_msg: "{{ role_name }} only supports ubuntu versions 20.04!"
+    success_msg: "{{ role_name }} supports {{ ansible_distribution }} \
+                  version {{ ansible_distribution_version }}"
+    quiet: "{{ not ansible_check_mode }}"
+    that:
+      - ansible_distribution|lower == "ubuntu"
+      - ansible_distribution_version|int in [20]
+
+- name: install xrdp from apt
+  include: xrdp_apt.yml
+
+- name: install xrdp sound
+  include: sound.yml
+  when: xrdp_server_enable_sound
+
+- name: update xrdp config
+  include: xrdp_config.yml
+
+- name: install desktop environment
+  include: 'desktop_{{ xrdp_server_desktop_environment }}.yml'

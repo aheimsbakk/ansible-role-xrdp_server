@@ -1,1 +1,12 @@
 ---
+xrdp_server_enable_sound: true
+xrdp_server_desktop_environment: gnome
+xrdp_server_idle_timeout_seconds: 0
+xrdp_server_disconnected_timeout_seconds: 0
+xrdp_server_loglevel: warning
+xrdp_server_max_sessions: 10
+
+# Security
+xrdp_server_allow_root_login: false
+xrdp_server_group_check: false
+xrdp_server_restrict_outbound_clipboard: false
