@@ -1,0 +1,23 @@
+---
+galaxy_info:
+  author: Arnulf Heimsbakk
+  description: Configure a XRDP server
+  company: Heimsbakk Inc.
+
+  license: GPL-2.0-or-later
+
+  min_ansible_version: 2.10
+
+  role_name: xrdp_server
+  namespace: heimsbakk
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - 20.04
+
+  galaxy_tags:
+    - desktop
+    - xrdp
+
+dependencies: []
