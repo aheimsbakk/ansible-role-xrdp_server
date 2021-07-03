@@ -4,6 +4,7 @@
     src: xrdp/km-00000414.ini
     dest: /etc/xrdp/km-00000414.ini
     mode: 0644
+  register: keyboard_file
 
 ## xrdp_keyboard.ini
 
@@ -15,6 +16,7 @@
     value: '{{ item.v }}'
     no_extra_spaces: true
     mode: 0644
+  register: keyboard_config
   loop:
     - s: 'default_rdp_layouts'
       o: 'rdp_layout_no'
@@ -33,6 +35,7 @@
     value: '{{ xrdp_server_max_sessions }}'
     no_extra_spaces: true
     mode: 0644
+  register: xrdp_server_max_sessions_config
 
 - name: set idle timout
   ini_file:
@@ -42,6 +45,7 @@
     value: '{{ xrdp_server_idle_timeout_seconds }}'
     no_extra_spaces: true
     mode: 0644
+  register: xrdp_server_idle_timeout_seconds_config
 
 - name: set disconnected timout
   ini_file:
@@ -51,6 +55,7 @@
     value: '{{ xrdp_server_disconnected_timeout_seconds }}'
     no_extra_spaces: true
     mode: 0644
+  register: xrdp_server_disconnected_timeout_seconds_config
 
 - name: kill disconnected sessions
   ini_file:
@@ -69,6 +74,7 @@
     value: '{{ xrdp_server_allow_root_login|lower }}'
     no_extra_spaces: true
     mode: 0644
+  register: xrdp_server_allow_root_login_config
 
 - name: restict outbound clipboard
   ini_file:
@@ -78,6 +84,7 @@
     value: '{{ xrdp_server_restrict_outbound_clipboard|lower }}'
     no_extra_spaces: true
     mode: 0644
+  register: xrdp_server_restrict_outbound_clipboard_config
 
 - name: check users against groups
   ini_file:
@@ -87,6 +94,7 @@
     value: '{{ xrdp_server_group_check|lower }}'
     no_extra_spaces: true
     mode: 0644
+  register: xrdp_server_group_check_config
 
 - name: set log level
   ini_file:
@@ -99,6 +107,7 @@
   loop:
     - LogLevel
     - SyslogLevel
+  register: xrdp_server_loglevel_config
 
 ## xrdp.ini
 
@@ -112,6 +121,7 @@
     - neutrinordp-any
     - vnc-any
     - Xvnc
+  register: remove_unused
 
 - name: set log level
   ini_file:
@@ -124,3 +134,26 @@
   loop:
     - LogLevel
     - SyslogLevel
+
+## restart
+
+- name: restart xrdp services
+  systemd:
+    name: '{{ item }}'
+    state: restarted
+  loop:
+    - xrdp
+    - xrdp-sesman
+  when:
+    - keyboard_file is changed or
+      keyboard_config is changed or
+      xrdp_server_max_sessions_config is changed or
+      xrdp_server_idle_timeout_seconds_config is changed or
+      xrdp_server_disconnected_timeout_seconds_config is changed or
+      xrdp_server_allow_root_login_config is changed or
+      xrdp_server_restrict_outbound_clipboard_config is changed or
+      xrdp_server_group_check_config is changed or
+      xrdp_server_loglevel_config is changed or
+      remove_unused is changed
+#    - not ansible_check_mode
+

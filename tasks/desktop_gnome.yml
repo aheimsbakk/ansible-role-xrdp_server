@@ -9,5 +9,4 @@
     enabled: false
     state: stopped
   loop:
-    - lightdm
     - gdm
