@@ -2,4 +2,4 @@
 user-db:user
 
 # System settings
-system-db:system
+system-db:local
