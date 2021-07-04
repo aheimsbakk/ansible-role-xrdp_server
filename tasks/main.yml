@@ -11,7 +11,9 @@
 
 - name: turn on unattended upgrades, since we turn off user notifications
   apt:
-    name: unattended-upgrades
+    name:
+      - gnome-backgrounds
+      - unattended-upgrades
 
 - name: install xrdp from apt
   include: xrdp_apt.yml
@@ -60,6 +62,6 @@
 
 - name: restart logind
   systemd:
-    name: logind
+    name: systemd-logind
     state: restarted
   when: disable_sleep is changed
