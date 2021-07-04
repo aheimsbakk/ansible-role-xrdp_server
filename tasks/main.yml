@@ -38,3 +38,11 @@
 - name: regenerate dconf when it has changed
   command: dconf update
   when: dconf_config is changed
+
+- name: copy out policy changes
+  copy:
+    src: polkit-1
+    dest: /etc/polkit-1/
+    mode: 0644
+    directory_mode: 0755
+    force: true
