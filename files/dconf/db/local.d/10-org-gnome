@@ -1,15 +1,35 @@
-# Don't show crash reports, and turn off update notifier updates
+#
+# Turn off desktop animations for speed
+#
 
-[com/ubuntu/update-notifier]
-show-apport-crashes = false
-no-show-notifications = true
+[org/gnome/desktop/interface]
+enable-animations = false
 
+#
+# Make fonts more visible
+#
+
+[org/gnome/settings-daemon/plugins/xsettings]
+hinting = 'medium'
+antialiasing = 'grayscale'
+
+#
+# Background
+#
+
+[org/gnome/desktop/background]
+picture-uri = 'file:///usr/share/backgrounds/gnome/Symbolics-2.jpg'
+
+#
 # Turn off prompt for color profile
+#
 
 [org/gnome/settings-daemon/plugins/color]
 active = false
 
+#
 # Turn off software updates through Gnome, using unattended-upgrades
+#
 
 [org/gnome/software]
 allow-updates = false
@@ -17,7 +37,9 @@ download-updates = false
 download-updates-notify = false
 install-bundles-system-wide = false
 
+#
 # Lock down the desktop a bit
+#
 
 [org/gnome/desktop/lockdown]
 disable-lock-screen = true
