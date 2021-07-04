@@ -41,8 +41,25 @@
 
 - name: copy out policy changes
   copy:
-    src: polkit-1
+    src: polkit-1/
     dest: /etc/polkit-1/
     mode: 0644
     directory_mode: 0755
     force: true
+
+- name: disable suspend
+  systemd:
+    name: '{{ item }}'
+    masked: true
+  loop:
+    - sleep
+    - suspend
+    - hibernate
+    - hybrid-sleep
+  register: disable_sleep
+
+- name: restart logind
+  systemd:
+    name: logind
+    state: restarted
+  when: disable_sleep is changed
