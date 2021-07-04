@@ -1,0 +1,9 @@
+[org/gnome/desktop/interface]
+enable-animations = false
+
+[org/gnome/settings-daemon/plugins/xsettings]
+hinting = 'medium'
+antialiasing = 'grayscale'
+
+[org/gnome/desktop/background]
+picture-uri = 'file:///usr/share/backgrounds/gnome/Symbolics-2.jpg'

@@ -9,6 +9,10 @@
       - ansible_distribution|lower == "ubuntu"
       - ansible_distribution_version|int in [20]
 
+- name: turn on unattended upgrades, since we turn off user notifications
+  apt:
+    name: unattended-upgrades
+
 - name: install xrdp from apt
   include: xrdp_apt.yml
 
@@ -21,3 +25,16 @@
 
 - name: install desktop environment
   include: 'desktop_{{ xrdp_server_desktop_environment }}.yml'
+
+- name: copy out dconf defaults
+  copy:
+    src: dconf/
+    dest: /etc/dconf/
+    mode: 0644
+    directory_mode: 0755
+    force: true
+  register: dconf_config
+
+- name: regenerate dconf when it has changed
+  command: dconf update
+  when: dconf_config is changed

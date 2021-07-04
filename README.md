@@ -4,6 +4,10 @@
 
 Install XRDP server and prepare sharing a Linux desktop environment over RDP.
 
+## Version
+
+* `main` --- latest development release, not for production
+
 ## Requirements
 
 * Ubuntu 20.04, Focal
@@ -33,6 +37,32 @@ None.
     - hosts: servers
       roles:
          - { role: username.rolename, x: 42 }
+
+## Testing
+
+### Test environment for all OSes
+
+```bash
+cd tests
+vagrant up
+```
+
+### Rerun role
+
+Run role on all OSes again.
+
+```bash
+vagrant provision
+```
+
+### Debug interactively
+
+This uses cluster ssh to work with all vagrant boxes at the same time.
+
+```bash
+vagrant ssh-config > ~/.ssh/config
+cat ~/.ssh/config | grep ^Host | cut -d\  -f2 | xargs cssh
+```
 
 ## License
 

@@ -1,0 +1,26 @@
+# Don't show crash reports, and turn off update notifier updates
+
+[com/ubuntu/update-notifier]
+show-apport-crashes = false
+no-show-notifications = true
+
+# Turn off prompt for color profile
+
+[org/gnome/settings-daemon/plugins/color]
+active = false
+
+# Turn off software updates through Gnome, using unattended-upgrades
+
+[org/gnome/software]
+allow-updates = false
+download-updates = false
+download-updates-notify = false
+install-bundles-system-wide = false
+
+# Lock down the desktop a bit
+
+[org/gnome/desktop/lockdown]
+disable-lock-screen = true
+disable-user-switching = true
+user-administration-disabled = true
+

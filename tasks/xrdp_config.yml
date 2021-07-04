@@ -27,12 +27,12 @@
 
 ## sesman.ini
 
-- name: set idle timout
+- name: set max connected sessions
   ini_file:
     path: /etc/xrdp/sesman.ini
     section: Sessions
     option: MaxSessions
-    value: '{{ xrdp_server_max_sessions }}'
+    value: '{{ xrdp_server_max_sessions|int|string }}'
     no_extra_spaces: true
     mode: 0644
   register: xrdp_server_max_sessions_config
@@ -42,7 +42,7 @@
     path: /etc/xrdp/sesman.ini
     section: Sessions
     option: IdleTimeLimit
-    value: '{{ xrdp_server_idle_timeout_seconds }}'
+    value: '{{ xrdp_server_idle_timeout_seconds|int|string }}'
     no_extra_spaces: true
     mode: 0644
   register: xrdp_server_idle_timeout_seconds_config
@@ -52,7 +52,7 @@
     path: /etc/xrdp/sesman.ini
     section: Sessions
     option: IdleTimeLimit
-    value: '{{ xrdp_server_disconnected_timeout_seconds }}'
+    value: '{{ xrdp_server_disconnected_timeout_seconds|int|string }}'
     no_extra_spaces: true
     mode: 0644
   register: xrdp_server_disconnected_timeout_seconds_config

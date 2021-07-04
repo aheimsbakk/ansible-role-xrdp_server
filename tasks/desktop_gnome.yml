@@ -3,10 +3,12 @@
   apt:
     name: vanilla-gnome-desktop
 
-- name: disable gdm and lightdm
+- name: stop gdm
   systemd:
-    name: '{{ item }}'
-    enabled: false
+    name: gdm
     state: stopped
-  loop:
-    - gdm
+
+- name: disable gdm
+  systemd:
+    name: gdm
+    enabled: false
