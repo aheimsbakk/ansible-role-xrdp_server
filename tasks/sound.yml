@@ -1,5 +1,5 @@
 ---
-- name: install build deps for xrdp sound
+- name: sound - install build deps for xrdp sound
   apt:
     name:
       - build-essential
@@ -7,71 +7,92 @@
       - git
       - pulseaudio
 
-- name: enable source repositories
-  replace:
-    path: /etc/apt/sources.list
-    regexp: '^(# )(deb-src .*)$'
-    replace: '\2'
-
-- name: install pulseaudio build-dep
-  apt:
-    name: pulseaudio
-    state: build-dep
-    update_cache: true
-  when: not ansible_check_mode
-
-- name: make xrdp directory in /opt
-  file:
-    path: /opt/xrdp
-    state: directory
-    mode: 0755
-
-- name: get pulse audio version
+- name: sound - get pulse audio version
   command: pulseaudio --version
   register: pulseaudio_version
   changed_when: false
+  ignore_errors: true
   check_mode: false
 
-# pulseaudio
-
-- name: download pulse source
-  command: apt-get source pulseaudio
-  args:
-    chdir: /opt/xrdp
-    warn: false
-  when: not ansible_check_mode
-
-- name: check if we have pulseaudio source
+- name: sound - check if we have already installed modules
   stat:
     path: '/opt/xrdp/{{ pulseaudio_version.stdout | replace(" ", "-") }}'
-  register: pulseaudio_directory
+  register: module_previous_installed
+  when: pulseaudio_version.rc == 0
 
-- name: configure pulseaudio
-  command: ./configure
-  args:
-    chdir: '/opt/xrdp/{{ pulseaudio_version.stdout | replace(" ", "-") }}'
-  when: pulseaudio_directory.stat.exists
+- name: compile and install xrdp pulseaudio module
+  include: sound-compile.yml
+  when:
+    - not module_previous_installed.stat.exists|default(false)
 
-# xrdp pulseaudio  module
-
-- name: download pulseaudio module for xrdp
-  git:
-    repo: '{{ xrdp_server_sound_git_repo }}'
-    dest: /opt/xrdp/pulseaudio-module-xrdp
-    version: '{{ xrdp_server_sound_driver_version }}'
-
-- name: check if we have pulseaudio module for xrdp source
-  stat:
-    path: /opt/xrdp/pulseaudio-module-xrdp
-  register: module_directory
-
-- name: configure pulseaudio
-  command: '{{ item }}'
-  args:
-    chdir: /opt/xrdp/pulseaudio-module-xrdp
-  when: module_directory.stat.exists
-  loop:
-    - ./bootstrap
-    - './configure PULSE_DIR=/opt/xrdp/{{ pulseaudio_version.stdout | replace(" ", "-") }}'
-    - make
-    - make install
+#- name: enable source repositories
+#  replace:
+#    path: /etc/apt/sources.list
+#    regexp: '^(# )(deb-src .*)$'
+#    replace: '\2'
+#
+#- name: install pulseaudio build-dep
+#  apt:
+#    name: pulseaudio
+#    state: build-dep
+#    update_cache: true
+#  when: not ansible_check_mode
+#
+#- name: make xrdp directory in /opt
+#  file:
+#    path: /opt/xrdp
+#    state: directory
+#    mode: 0755
+#
+#
+## pulseaudio
+#
+#- name: download pulse source
+#  command: apt-get source pulseaudio
+#  args:
+#    chdir: /opt/xrdp
+#    warn: false
+#  when: not ansible_check_mode
+#
+#- name: check if we have pulseaudio source
+#  stat:
+#    path: '/opt/xrdp/{{ pulseaudio_version.stdout | replace(" ", "-") }}'
+#  register: pulseaudio_directory
+#
+#- name: configure pulseaudio
+#  command: ./configure
+#  args:
+#    chdir: '/opt/xrdp/{{ pulseaudio_version.stdout | replace(" ", "-") }}'
+#  when: pulseaudio_directory.stat.exists
+#
+## xrdp pulseaudio  module
+#
+#- name: download pulseaudio module for xrdp
+#  git:
+#    repo: '{{ xrdp_server_sound_git_repo }}'
+#    dest: /opt/xrdp/pulseaudio-module-xrdp
+#    version: '{{ xrdp_server_sound_driver_version }}'
+#
+#- name: check if we have pulseaudio module for xrdp source
+#  stat:
+#    path: /opt/xrdp/pulseaudio-module-xrdp
+#  register: module_directory
+#
+#- name: make and install pulseaudio module for xrdp
+#  command: '{{ item }}'
+#  args:
+#    chdir: /opt/xrdp/pulseaudio-module-xrdp
+#  when: module_directory.stat.exists
+#  loop:
+#    - ./bootstrap
+#    - './configure PULSE_DIR=/opt/xrdp/{{ pulseaudio_version.stdout | replace(" ", "-") }}'
+#    - make
+#    - make install
+#  register: module_installed
+#
+#- name: create installed file
+#  copy:
+#    dest: /opt/xrdp/pulseaudio-module-xrdp.installed
+#    content: |
+#      {{ pulseaudio_version.stdout | replace(" ", "-") }}
+#    mode: 0644

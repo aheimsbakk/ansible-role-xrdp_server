@@ -14,16 +14,18 @@
     name:
       - gnome-backgrounds
       - unattended-upgrades
+    cache_valid_time: 3600
+    update_cache: true
 
 - name: install xrdp from apt
-  include: xrdp_apt.yml
+  include: xrdp-apt.yml
 
 - name: install xrdp sound
   include: sound.yml
   when: xrdp_server_sound_enable
 
 - name: update xrdp config
-  include: xrdp_config.yml
+  include: xrdp-config.yml
 
 - name: install desktop environment
   include: 'desktop_{{ xrdp_server_desktop_environment }}.yml'

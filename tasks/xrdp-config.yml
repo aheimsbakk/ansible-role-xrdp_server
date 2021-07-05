@@ -1,5 +1,5 @@
 ---
-- name: add norwegian language support
+- name: xrdp-config - add norwegian language support
   copy:
     src: xrdp/km-00000414.ini
     dest: /etc/xrdp/km-00000414.ini
@@ -8,7 +8,7 @@
 
 ## xrdp_keyboard.ini
 
-- name: add norwegian to xrdp_keyboard.ini
+- name: xrdp-config - add norwegian to xrdp_keyboard.ini
   ini_file:
     path: /etc/xrdp/xrdp_keyboard.ini
     section: '{{ item.s }}'
@@ -27,7 +27,7 @@
 
 ## sesman.ini
 
-- name: set max connected sessions
+- name: xrdp-config - set max connected sessions
   ini_file:
     path: /etc/xrdp/sesman.ini
     section: Sessions
@@ -37,7 +37,7 @@
     mode: 0644
   register: xrdp_server_max_sessions_config
 
-- name: set idle timout
+- name: xrdp-config - set idle timout
   ini_file:
     path: /etc/xrdp/sesman.ini
     section: Sessions
@@ -47,7 +47,7 @@
     mode: 0644
   register: xrdp_server_idle_timeout_seconds_config
 
-- name: set disconnected timout
+- name: xrdp-config - set disconnected timout
   ini_file:
     path: /etc/xrdp/sesman.ini
     section: Sessions
@@ -57,7 +57,7 @@
     mode: 0644
   register: xrdp_server_disconnected_timeout_seconds_config
 
-- name: kill disconnected sessions
+- name: xrdp-config - kill disconnected sessions
   ini_file:
     path: /etc/xrdp/sesman.ini
     section: Sessions
@@ -66,7 +66,7 @@
     no_extra_spaces: true
     mode: 0644
 
-- name: allow root login
+- name: xrdp-config - allow root login
   ini_file:
     path: /etc/xrdp/sesman.ini
     section: Security
@@ -76,7 +76,7 @@
     mode: 0644
   register: xrdp_server_allow_root_login_config
 
-- name: restict outbound clipboard
+- name: xrdp-config - restict outbound clipboard
   ini_file:
     path: /etc/xrdp/sesman.ini
     section: Security
@@ -86,7 +86,7 @@
     mode: 0644
   register: xrdp_server_restrict_outbound_clipboard_config
 
-- name: check users against groups
+- name: xrdp-config - check users against groups
   ini_file:
     path: /etc/xrdp/sesman.ini
     section: Security
@@ -96,7 +96,7 @@
     mode: 0644
   register: xrdp_server_group_check_config
 
-- name: set log level
+- name: xrdp-config - set log level
   ini_file:
     path: /etc/xrdp/sesman.ini
     section: Logging
@@ -111,7 +111,7 @@
 
 ## xrdp.ini
 
-- name: remove unused options
+- name: xrdp-config - remove unused options
   ini_file:
     path: /etc/xrdp/xrdp.ini
     section: '{{ item }}'
@@ -123,7 +123,7 @@
     - Xvnc
   register: remove_unused
 
-- name: set log level
+- name: xrdp-config - set log level
   ini_file:
     path: /etc/xrdp/xrdp.ini
     section: Logging
@@ -137,7 +137,7 @@
 
 ## restart
 
-- name: restart xrdp services
+- name: xrdp-config - restart xrdp services
   systemd:
     name: '{{ item }}'
     state: restarted
@@ -155,5 +155,4 @@
       xrdp_server_group_check_config is changed or
       xrdp_server_loglevel_config is changed or
       remove_unused is changed
-#    - not ansible_check_mode
 

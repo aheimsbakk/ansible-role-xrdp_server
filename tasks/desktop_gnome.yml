@@ -12,3 +12,4 @@
   systemd:
     name: gdm
     enabled: false
+  changed_when: false                  # workaround

@@ -1,0 +1,64 @@
+---
+- name: sound-compile - enable source repositories
+  replace:
+    path: /etc/apt/sources.list
+    regexp: '^(# )(deb-src .*)$'
+    replace: '\2'
+
+- name: sound-compile install pulseaudio build-dep
+  apt:
+    name: pulseaudio
+    state: build-dep
+    update_cache: true
+  when: not ansible_check_mode
+
+- name: sound-compile - make xrdp directory in /opt
+  file:
+    path: /opt/xrdp
+    state: directory
+    mode: 0755
+
+# pulseaudio
+
+- name: sound-compile - download pulse source
+  command: apt-get source pulseaudio
+  args:
+    chdir: /opt/xrdp
+    warn: false
+  when: not ansible_check_mode
+
+- name: sound-compile - check if we have pulseaudio source
+  stat:
+    path: '/opt/xrdp/{{ pulseaudio_version.stdout | default("") | replace(" ", "-") }}'
+  register: pulseaudio_directory
+
+- name: sound-compile - configure pulseaudio
+  command: ./configure
+  args:
+    chdir: '/opt/xrdp/{{ pulseaudio_version.stdout | default("") | replace(" ", "-") }}'
+  when: pulseaudio_directory.stat.exists
+
+# xrdp pulseaudio  module
+
+- name: sound-compile - download pulseaudio module for xrdp
+  git:
+    repo: '{{ xrdp_server_sound_git_repo }}'
+    dest: /opt/xrdp/pulseaudio-module-xrdp
+    version: '{{ xrdp_server_sound_driver_version }}'
+
+- name: sound-compile - check if we have pulseaudio module for xrdp source
+  stat:
+    path: /opt/xrdp/pulseaudio-module-xrdp
+  register: module_directory
+
+- name: sound-compile - make and install pulseaudio module for xrdp
+  command: '{{ item }}'
+  args:
+    chdir: /opt/xrdp/pulseaudio-module-xrdp
+  when: module_directory.stat.exists
+  loop:
+    - ./bootstrap
+    - './configure PULSE_DIR=/opt/xrdp/{{ pulseaudio_version.stdout | replace(" ", "-") }}'
+    - make
+    - make install
+  register: module_installed

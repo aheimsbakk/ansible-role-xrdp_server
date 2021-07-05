@@ -1,0 +1,4 @@
+---
+- name: xrdp-apt - install xrdp
+  apt:
+    name: xrdp
