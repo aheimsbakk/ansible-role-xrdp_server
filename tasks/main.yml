@@ -20,7 +20,7 @@
 
 - name: install xrdp sound
   include: sound.yml
-  when: xrdp_server_enable_sound
+  when: xrdp_server_sound_enable
 
 - name: update xrdp config
   include: xrdp_config.yml

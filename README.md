@@ -16,7 +16,8 @@ Install XRDP server and prepare sharing a Linux desktop environment over RDP.
 
 * `xrdp_server_desktop_environment` --- Which desktop environment to install, default `gnome`.
     * `gnome` == The vanilla Gnome desktop environment
-* `xrdp_server_enable_sound` --- Enable sound redirect, default `true`.
+* `xrdp_server_sound_enable` --- Enable sound redirect, default `true`.
+* `xrdp_server_sound_driver_version` --- Version of neutrinolabs driver to use, default `v0.5`
 * `xrdp_server_disconnected_timeout_seconds` --- If `>0` then disconnected sessions will be killed, default `0`.
 * `xrdp_server_idle_timeout_seconds` --- If `>0` then disconnects session after idle time, default `0`.
 * `xrdp_server_loglevel` --- Set loglevel to core, error, warning, info or debug, default `warning`.

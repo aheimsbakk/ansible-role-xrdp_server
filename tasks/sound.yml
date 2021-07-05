@@ -1,1 +1,8 @@
 ---
+- name: install build deps for sound
+  apt:
+    name:
+      - build-essential
+      - libpulse-dev
+      - autoconf
+      - libtool
