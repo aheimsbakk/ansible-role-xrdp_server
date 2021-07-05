@@ -1,7 +1,7 @@
 ---
 xrdp_server_sound_enable: false
 xrdp_server_sound_driver_version: v0.5
-xrdp_server_desktop_environment: ubuntu
+xrdp_server_desktop_environment: gnome
 xrdp_server_idle_timeout_seconds: 0
 xrdp_server_disconnected_timeout_seconds: 0
 xrdp_server_loglevel: warning

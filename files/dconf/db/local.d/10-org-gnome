@@ -17,8 +17,8 @@ antialiasing = 'grayscale'
 # Background
 #
 
-[org/gnome/desktop/background]
-picture-uri = 'file:///usr/share/backgrounds/gnome/Symbolics-2.jpg'
+#[org/gnome/desktop/background]
+#picture-uri = 'file:///usr/share/backgrounds/gnome/Symbolics-2.jpg'
 
 #
 # Turn off prompt for color profile

@@ -18,6 +18,9 @@
     cache_valid_time: 3600
     update_cache: true
 
+- name: install desktop environment
+  include: 'desktop-{{ xrdp_server_desktop_environment }}.yml'
+
 - name: install xrdp from apt
   include: xrdp-apt.yml
 
@@ -27,9 +30,6 @@
 
 - name: update xrdp config
   include: xrdp-config.yml
-
-- name: install desktop environment
-  include: 'desktop-{{ xrdp_server_desktop_environment }}.yml'
 
 - name: copy out dconf defaults
   copy:
