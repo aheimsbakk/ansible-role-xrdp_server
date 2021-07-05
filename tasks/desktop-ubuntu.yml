@@ -3,13 +3,13 @@
   apt:
     name: ubuntu-desktop
 
-- name: desktop-ubuntu - stop lightdm
+- name: desktop-ubuntu - stop gdm
   systemd:
-    name: lightdm
+    name: gdm
     state: stopped
 
-- name: desktop-ubuntu - disable lightdm
+- name: desktop-ubuntu - disable gdm
   systemd:
-    name: lightdm
+    name: gdm
     enabled: false
   changed_when: false                  # workaround
