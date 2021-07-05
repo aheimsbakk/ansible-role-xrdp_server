@@ -13,6 +13,7 @@
   apt:
     name:
       - gnome-backgrounds
+      - tigervnc-standalone-server
       - unattended-upgrades
     cache_valid_time: 3600
     update_cache: true
@@ -28,7 +29,7 @@
   include: xrdp-config.yml
 
 - name: install desktop environment
-  include: 'desktop_{{ xrdp_server_desktop_environment }}.yml'
+  include: 'desktop-{{ xrdp_server_desktop_environment }}.yml'
 
 - name: copy out dconf defaults
   copy:

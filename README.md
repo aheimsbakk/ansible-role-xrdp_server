@@ -2,7 +2,7 @@
 
 # xrdp_server
 
-Install XRDP server and prepare sharing a Linux desktop environment over RDP.
+Sets up desktop sharing with RDP. Install [neutrinolabs](https://github.com/neutrinolabs) XRDP server and a desktop environment.
 
 ## Version
 
@@ -14,20 +14,21 @@ Install XRDP server and prepare sharing a Linux desktop environment over RDP.
 
 ## Role Variables
 
-* `xrdp_server_desktop_environment` --- Which desktop environment to install, default `gnome`.
-    * `gnome` == The vanilla Gnome desktop environment
-* `xrdp_server_sound_enable` --- Enable sound redirect, default `true`.
-* `xrdp_server_sound_driver_version` --- Version of neutrinolabs driver to use, default `v0.5`
+* `xrdp_server_desktop_environment` --- Which desktop environment to install, default `ubuntu`.
+    * `gnome` --- The vanilla Gnome desktop environment
+    * `ubuntu` --- Ubuntu standard desktop
 * `xrdp_server_disconnected_timeout_seconds` --- If `>0` then disconnected sessions will be killed, default `0`.
 * `xrdp_server_idle_timeout_seconds` --- If `>0` then disconnects session after idle time, default `0`.
 * `xrdp_server_loglevel` --- Set loglevel to core, error, warning, info or debug, default `warning`.
 * `xrdp_server_max_sessions` --- Maximum number of connected clients, default `10`.
+* `xrdp_server_sound_driver_version` --- Version of neutrinolabs driver to use, default `v0.5`
+* `xrdp_server_sound_enable` --- Enable sound redirect, default `false`.
 
 Security related.
 
 * `xrdp_server_allow_root_login` --- Allow graphical login for root, default `false`.
-* `xrdp_server_group_check` --- Check if user in `tsusers` or admin in `tsadmins`, default `false`.
-* `xrdp_server_restrict_outbound_clipboard` --- Allow graphical login for root, default `false`.
+* `xrdp_server_group_check` --- Check if users are in `tsusers` or admins are in `tsadmins`, default `false`.
+* `xrdp_server_restrict_outbound_clipboard` --- Disable outbound clipboard, default `false`.
 
 ## Dependencies
 
@@ -35,9 +36,17 @@ None.
 
 ## Example Playbook
 
-    - hosts: servers
+    - name: Install XRDP Ubuntu Desktop with sound redirect
+      hosts: all
+      become: true
       roles:
-         - { role: username.rolename, x: 42 }
+        - role: xrdp_server
+          xrdp_server_desktop_environment: ubuntu
+          xrdp_server_disconnected_timeout_seconds: 60
+          xrdp_server_idle_timeout_seconds: 86400
+          xrdp_server_loglevel: error
+          xrdp_server_max_sessions: 25
+          xrdp_server_sound_enable: true
 
 ## Testing
 

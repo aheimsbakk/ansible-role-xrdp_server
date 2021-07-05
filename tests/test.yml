@@ -4,3 +4,9 @@
   become: true
   roles:
     - role: ../../.
+      xrdp_server_desktop_environment: ubuntu
+      xrdp_server_disconnected_timeout_seconds: 60
+      xrdp_server_idle_timeout_seconds: 86400
+      xrdp_server_loglevel: error
+      xrdp_server_max_sessions: 25
+      xrdp_server_sound_enable: true

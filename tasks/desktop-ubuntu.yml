@@ -1,0 +1,15 @@
+---
+- name: desktop-ubuntu - install ubuntu desktop
+  apt:
+    name: ubuntu-desktop
+
+- name: desktop-ubuntu - stop lightdm
+  systemd:
+    name: lightdm
+    state: stopped
+
+- name: desktop-ubuntu - disable lightdm
+  systemd:
+    name: lightdm
+    enabled: false
+  changed_when: false                  # workaround

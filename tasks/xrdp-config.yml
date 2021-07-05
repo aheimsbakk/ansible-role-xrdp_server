@@ -120,7 +120,7 @@
   loop:
     - neutrinordp-any
     - vnc-any
-    - Xvnc
+    # - Xvnc
   register: remove_unused
 
 - name: xrdp-config - set log level
