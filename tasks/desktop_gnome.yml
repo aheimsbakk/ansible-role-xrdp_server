@@ -1,14 +1,14 @@
 ---
-- name: install gnome desktop
+- name: desktop-gnome - install gnome desktop
   apt:
     name: vanilla-gnome-desktop
 
-- name: stop gdm
+- name: desktop-gnome - stop gdm
   systemd:
     name: gdm
     state: stopped
 
-- name: disable gdm
+- name: desktop-gnome - disable gdm
   systemd:
     name: gdm
     enabled: false
