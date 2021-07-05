@@ -1,8 +1,77 @@
 ---
-- name: install build deps for sound
+- name: install build deps for xrdp sound
   apt:
     name:
       - build-essential
-      - libpulse-dev
-      - autoconf
-      - libtool
+      - dpkg-dev
+      - git
+      - pulseaudio
+
+- name: enable source repositories
+  replace:
+    path: /etc/apt/sources.list
+    regexp: '^(# )(deb-src .*)$'
+    replace: '\2'
+
+- name: install pulseaudio build-dep
+  apt:
+    name: pulseaudio
+    state: build-dep
+    update_cache: true
+  when: not ansible_check_mode
+
+- name: make xrdp directory in /opt
+  file:
+    path: /opt/xrdp
+    state: directory
+    mode: 0755
+
+- name: get pulse audio version
+  command: pulseaudio --version
+  register: pulseaudio_version
+  changed_when: false
+  check_mode: false
+
+# pulseaudio
+
+- name: download pulse source
+  command: apt-get source pulseaudio
+  args:
+    chdir: /opt/xrdp
+    warn: false
+  when: not ansible_check_mode
+
+- name: check if we have pulseaudio source
+  stat:
+    path: '/opt/xrdp/{{ pulseaudio_version.stdout | replace(" ", "-") }}'
+  register: pulseaudio_directory
+
+- name: configure pulseaudio
+  command: ./configure
+  args:
+    chdir: '/opt/xrdp/{{ pulseaudio_version.stdout | replace(" ", "-") }}'
+  when: pulseaudio_directory.stat.exists
+
+# xrdp pulseaudio  module
+
+- name: download pulseaudio module for xrdp
+  git:
+    repo: '{{ xrdp_server_sound_git_repo }}'
+    dest: /opt/xrdp/pulseaudio-module-xrdp
+    version: '{{ xrdp_server_sound_driver_version }}'
+
+- name: check if we have pulseaudio module for xrdp source
+  stat:
+    path: /opt/xrdp/pulseaudio-module-xrdp
+  register: module_directory
+
+- name: configure pulseaudio
+  command: '{{ item }}'
+  args:
+    chdir: /opt/xrdp/pulseaudio-module-xrdp
+  when: module_directory.stat.exists
+  loop:
+    - ./bootstrap
+    - './configure PULSE_DIR=/opt/xrdp/{{ pulseaudio_version.stdout | replace(" ", "-") }}'
+    - make
+    - make install
