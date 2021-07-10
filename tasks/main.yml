@@ -1,44 +1,32 @@
 ---
 - name: check if we're running supported os
   assert:
-    fail_msg: "{{ role_name }} only supports ubuntu versions 20.04, 21.10!"
+    fail_msg: "{{ role_name }} only supports Ubuntu 20.04, 21.10 and Fedora 34!"
     success_msg: "{{ role_name }} supports {{ ansible_distribution }} \
                   version {{ ansible_distribution_version }}"
-    quiet: "{{ not ansible_check_mode }}"
-    that:
-      - ansible_distribution|lower == "ubuntu"
-      - ansible_distribution_version in ["20.04", "21.10"]
+    quiet: not ansible_check_mode
+    that: ( ansible_distribution|lower == "ubuntu" and
+            ansible_distribution_version in ["20.04", "21.10"] ) or
+          ( ansible_distribution|lower == "fedora" and
+            ansible_distribution_version in ["34"] )
 
-- name: turn on unattended upgrades, since we turn off user notifications
-  apt:
-    name:
-      - unattended-upgrades
-    cache_valid_time: 3600
-    update_cache: true
+# desktop for os
 
-- name: install tigervnc
-  apt:
-    name:
-      - tigervnc-standalone-server
-  when: xrdp_server_tigervnc_enable
+- name: include desktop family
+  include: "{{ ansible_os_family | lower }}.yml"
 
-- name: install desktop environment
-  include: 'desktop-{{ xrdp_server_desktop_environment }}.yml'
-
-- name: install xrdp from apt
-  include: xrdp-apt.yml
-  when: not xrdp_server_xrdp_source_build
-
-- name: install xrdp from source
-  include: xrdp-source.yml
-  when: xrdp_server_xrdp_source_build
+# xrdp sound
 
 - name: install xrdp sound
   include: sound.yml
   when: xrdp_server_sound_enable
 
+# xrdp config
+
 - name: update xrdp config
   include: xrdp-config.yml
+
+# dconf
 
 - name: copy out dconf defaults
   copy:
@@ -53,6 +41,8 @@
   command: dconf update
   when: dconf_config is changed
 
+# polkit
+
 - name: copy out policy changes
   copy:
     src: polkit-1/
@@ -61,15 +51,27 @@
     directory_mode: 0755
     force: true
 
+# Xwrapper.config
+
+- name: allow x11 login, only needed for fedora
+  ini_file:
+    path: /etc/X11/Xwrapper.config
+    section: null
+    option: allowed_users
+    value: console
+    mode: 0644
+
+# suspend
+
 - name: disable suspend
   systemd:
     name: '{{ item }}'
     masked: true
   loop:
-    - sleep
-    - suspend
-    - hibernate
-    - hybrid-sleep
+    - sleep.target
+    - suspend.target
+    - hibernate.target
+    - hybrid-sleep.target
   register: disable_sleep
 
 - name: restart logind

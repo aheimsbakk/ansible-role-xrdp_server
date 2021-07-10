@@ -1,0 +1,33 @@
+---
+- name: debian - turn on unattended upgrades
+  apt:
+    name:
+      - unattended-upgrades
+    cache_valid_time: 3600
+    update_cache: true
+
+- name: debian - install tigervnc
+  apt:
+    name:
+      - tigervnc-standalone-server
+  when: xrdp_server_tigervnc_enable
+
+- name: debian - install xrdp
+  apt:
+    name: xrdp
+
+- name: debian - install gnome desktop
+  apt:
+    name: vanilla-gnome-desktop
+  when: xrdp_server_desktop_environment == "gnome"
+
+- name: debian - stop gdm
+  systemd:
+    name: gdm
+    state: stopped
+
+- name: debian - disable gdm
+  systemd:
+    name: gdm
+    enabled: false
+  changed_when: false                  # workaround

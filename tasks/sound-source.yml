@@ -1,17 +1,28 @@
 ---
-- name: sound-compile - enable source repositories
+- name: sound-compile - debian - enable source repositories
   replace:
     path: /etc/apt/sources.list
     regexp: '^(# )(deb-src .*)$'
     replace: '\2'
+  when: ansible_distribution|lower == "debian"
 
-- name: sound-compile install pulseaudio build-dep
+- name: sound-compile - debian - install pulseaudio build-dep
   apt:
     name: pulseaudio
     state: build-dep
     update_cache: true
-  when: not ansible_check_mode
+  when:
+    - not ansible_check_mode
+    - ansible_distribution|lower == "debian"
 
+- name: sound-compile - redhat - install pulseaudio build-dep
+  apt:
+    name: pulseaudio
+    state: build-dep
+    update_cache: true
+  when:
+    - not ansible_check_mode
+    - ansible_distribution|lower == "redhat"
 - name: sound-compile - make xrdp directory in /opt
   file:
     path: /opt/xrdp
@@ -20,12 +31,14 @@
 
 # pulseaudio
 
-- name: sound-compile - download pulse source
+- name: sound-compile - debian - download pulse source
   command: apt-get source pulseaudio
   args:
     chdir: /opt/xrdp
     warn: false
-  when: not ansible_check_mode
+  when:
+    - not ansible_check_mode
+    - ansible_distribution|lower == "debian"
 
 - name: sound-compile - check if we have pulseaudio source
   stat:

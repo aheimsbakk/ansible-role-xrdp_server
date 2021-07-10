@@ -1,0 +1,35 @@
+---
+#- name: redhat - turn on unattended upgrades
+#  apt:
+#    name:
+#      - unattended-upgrades
+#    cache_valid_time: 3600
+#    update_cache: true
+
+- name: redhat - install tigervnc
+  dnf:
+    name:
+      - tigervnc-server-minimal
+  when: xrdp_server_tigervnc_enable
+
+- name: debian - install xrdp
+  dnf:
+    name:
+      - xrdp
+      - xorgxrdp
+
+- name: redhat - install gnome desktop
+  dnf:
+    name: "@basic-desktop-environment"
+  when: xrdp_server_desktop_environment == "gnome"
+
+- name: redhat - stop gdm
+  systemd:
+    name: gdm
+    state: stopped
+
+- name: redhat - disable gdm
+  systemd:
+    name: gdm
+    enabled: false
+  changed_when: false                  # workaround

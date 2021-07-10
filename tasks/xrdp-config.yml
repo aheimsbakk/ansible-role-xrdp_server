@@ -120,7 +120,7 @@
   loop:
     - neutrinordp-any
     - vnc-any
-    - xorg
+    - Xorg
   register: remove_unused
   when: xrdp_server_tigervnc_enable
 
