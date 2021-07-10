@@ -1,11 +1,15 @@
 ---
-xrdp_server_sound_enable: false
-xrdp_server_sound_driver_version: v0.5
 xrdp_server_desktop_environment: gnome
-xrdp_server_idle_timeout_seconds: 0
 xrdp_server_disconnected_timeout_seconds: 0
+xrdp_server_idle_timeout_seconds: 0
 xrdp_server_loglevel: warning
 xrdp_server_max_sessions: 10
+xrdp_server_sound_driver_version: v0.5
+xrdp_server_sound_enable: false
+xrdp_server_xrdp_source_build: false
+xrdp_server_xrdp_source_version: v0.9.16
+xrdp_server_xrdp_xorgxrdp_source_version: v0.2.16
+xrdp_server_tigervnc_enable: false
 
 # Security
 xrdp_server_allow_root_login: false
@@ -14,4 +18,5 @@ xrdp_server_restrict_outbound_clipboard: false
 
 # Git repos
 xrdp_server_sound_git_repo: https://github.com/neutrinolabs/pulseaudio-module-xrdp.git
-
+xrdp_server_xrdp_git_repo: https://github.com/neutrinolabs/xrdp.git
+xrdp_server_xrdp_xorgxrdp_git_repo: https://github.com/neutrinolabs/xorgxrdp.git

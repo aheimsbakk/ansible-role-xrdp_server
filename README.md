@@ -1,5 +1,3 @@
-⚠️ Development
-
 # xrdp_server
 
 Sets up desktop sharing with RDP. Install [neutrinolabs](https://github.com/neutrinolabs) XRDP server and a desktop environment.
@@ -15,13 +13,19 @@ Sets up desktop sharing with RDP. Install [neutrinolabs](https://github.com/neut
 ## Role Variables
 
 * `xrdp_server_desktop_environment` --- Which desktop environment to install, default `gnome`.
-    * `gnome` --- The vanilla Gnome desktop environment
-* `xrdp_server_disconnected_timeout_seconds` --- If `>0` then disconnected sessions will be killed, default `0`.
+    * `gnome` --- The vanilla Gnome desktop environment.
+<!---
+* `xrdp_server_xrdp_source_build` --- Build xrdp from source, default `false`.
+* `xrdp_server_xrdp_source_version` --- Version of source to use, default `v0.9.16`.
+* `xrdp_server_xrdp_xorgxrdp_source_version` --- Version of source to use, default `v0.2.16`.
+-->
+* `xrdp_server_disconnected_timeout_seconds` --- If `>0` then disconnected sessions will be killed after seconds, default `0`.
 * `xrdp_server_idle_timeout_seconds` --- If `>0` then disconnects session after idle time, default `0`.
-* `xrdp_server_loglevel` --- Set loglevel to core, error, warning, info or debug, default `warning`.
+* `xrdp_server_loglevel` --- Set log level to core, error, warning, info or debug, default `warning`.
 * `xrdp_server_max_sessions` --- Maximum number of connected clients, default `10`.
 * `xrdp_server_sound_driver_version` --- Version of neutrinolabs driver to use, default `v0.5`
 * `xrdp_server_sound_enable` --- Enable sound redirect, default `false`.
+* `xrdp_server_tigervnc_enable` --- Use tigervnc instead of `xorgxrdp`, default `false`.
 
 Security related.
 
@@ -35,12 +39,12 @@ None.
 
 ## Example Playbook
 
-    - name: Install XRDP Ubuntu Desktop with sound redirect
+    - name: install XRDP Ubuntu Desktop with sound redirect
       hosts: all
       become: true
       roles:
         - role: xrdp_server
-          xrdp_server_desktop_environment: ubuntu
+          xrdp_server_desktop_environment: gnome
           xrdp_server_disconnected_timeout_seconds: 60
           xrdp_server_idle_timeout_seconds: 86400
           xrdp_server_loglevel: error
@@ -80,3 +84,7 @@ GPL-2.0
 ## Author Informatiom
 
 Arnulf Heimsbakk
+
+<!---
+vim: set spell spelllang=en:
+-->

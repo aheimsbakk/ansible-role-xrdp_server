@@ -40,7 +40,7 @@
 
 # xrdp pulseaudio  module
 
-- name: sound-compile - download pulseaudio module for xrdp
+- name: sound-compile - download xrdp pulse audio module source
   git:
     repo: '{{ xrdp_server_sound_git_repo }}'
     dest: /opt/xrdp/pulseaudio-module-xrdp
@@ -59,6 +59,6 @@
   loop:
     - ./bootstrap
     - './configure PULSE_DIR=/opt/xrdp/{{ pulseaudio_version.stdout | replace(" ", "-") }}'
-    - make
+    - make -j 2
     - make install
   register: module_installed

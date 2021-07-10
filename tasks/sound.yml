@@ -22,6 +22,6 @@
   when: pulseaudio_version.rc == 0
 
 - name: compile and install xrdp pulseaudio module
-  include: sound-compile.yml
+  include: sound-source.yml
   when:
     - not module_previous_installed.stat.exists|default(false)

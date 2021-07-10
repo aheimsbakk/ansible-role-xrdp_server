@@ -111,7 +111,7 @@
 
 ## xrdp.ini
 
-- name: xrdp-config - remove unused options
+- name: xrdp-config - remove unused options for xvnc
   ini_file:
     path: /etc/xrdp/xrdp.ini
     section: '{{ item }}'
@@ -120,8 +120,22 @@
   loop:
     - neutrinordp-any
     - vnc-any
-    # - Xvnc
+    - xorg
   register: remove_unused
+  when: xrdp_server_tigervnc_enable
+
+- name: xrdp-config - remove unused options for xorgxrdp
+  ini_file:
+    path: /etc/xrdp/xrdp.ini
+    section: '{{ item }}'
+    state: absent
+    mode: 0644
+  loop:
+    - neutrinordp-any
+    - vnc-any
+    - Xvnc
+  register: remove_unused
+  when: not xrdp_server_tigervnc_enable
 
 - name: xrdp-config - set log level
   ini_file:

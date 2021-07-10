@@ -1,28 +1,37 @@
 ---
 - name: check if we're running supported os
   assert:
-    fail_msg: "{{ role_name }} only supports ubuntu versions 20.04!"
+    fail_msg: "{{ role_name }} only supports ubuntu versions 20.04, 21.10!"
     success_msg: "{{ role_name }} supports {{ ansible_distribution }} \
                   version {{ ansible_distribution_version }}"
     quiet: "{{ not ansible_check_mode }}"
     that:
       - ansible_distribution|lower == "ubuntu"
-      - ansible_distribution_version|int in [20]
+      - ansible_distribution_version in ["20.04", "21.10"]
 
 - name: turn on unattended upgrades, since we turn off user notifications
   apt:
     name:
-      - gnome-backgrounds
-      - tigervnc-standalone-server
       - unattended-upgrades
     cache_valid_time: 3600
     update_cache: true
+
+- name: install tigervnc
+  apt:
+    name:
+      - tigervnc-standalone-server
+  when: xrdp_server_tigervnc_enable
 
 - name: install desktop environment
   include: 'desktop-{{ xrdp_server_desktop_environment }}.yml'
 
 - name: install xrdp from apt
   include: xrdp-apt.yml
+  when: not xrdp_server_xrdp_source_build
+
+- name: install xrdp from source
+  include: xrdp-source.yml
+  when: xrdp_server_xrdp_source_build
 
 - name: install xrdp sound
   include: sound.yml
