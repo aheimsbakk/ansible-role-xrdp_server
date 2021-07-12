@@ -10,7 +10,8 @@ Sets up desktop sharing with RDP. Install [neutrinolabs](https://github.com/neut
 
 * Fedora 34
 * Ubuntu 20.04, Focal
-* Ubuntu 21.10, Focal
+* Ubuntu 21.04, Hirsute
+* Ubuntu 21.10, Impish
 
 ## Role Variables
 
@@ -26,7 +27,7 @@ Sets up desktop sharing with RDP. Install [neutrinolabs](https://github.com/neut
 * `xrdp_server_loglevel` --- Set log level to core, error, warning, info or debug, default `warning`.
 * `xrdp_server_max_sessions` --- Maximum number of connected clients, default `10`.
 * `xrdp_server_sound_driver_version` --- Version of neutrinolabs driver to use, default `v0.5`
-* `xrdp_server_sound_enable` --- Enable sound redirect, default `false`.
+* `xrdp_server_sound_enable` --- Enable sound redirect - Ubuntu only, default `false`.
 * `xrdp_server_tigervnc_enable` --- Use tigervnc instead of `xorgxrdp`, default `false`.
 
 Security related.
@@ -41,7 +42,7 @@ None.
 
 ## Example Playbook
 
-    - name: install XRDP Ubuntu Desktop with sound redirect
+    - name: install XRDP with sound redirect on Ubuntu
       hosts: all
       become: true
       roles:

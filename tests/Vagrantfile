@@ -5,9 +5,10 @@ CURRENT_PATH = File.dirname(File.expand_path(__FILE__))
 
 Vagrant.configure("2") do |config|
   boxes = [
-    { :name => "fedora34", :box => "fedora/34-cloud-base" },
     { :name => "focal", :box => "ubuntu/focal64" },
+    { :name => "hirsute", :box => "ubuntu/hirsute64" },
     { :name => "impish", :box => "ubuntu/impish64" },
+    { :name => "fedora34", :box => "fedora/34-cloud-base" },
   ]
   rdp_port = 10000
   boxes.each do |opts|

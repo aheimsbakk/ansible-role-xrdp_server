@@ -111,6 +111,32 @@
 
 ## xrdp.ini
 
+- name: xrdp-config - xorg config
+  ini_file:
+    path: /etc/xrdp/xrdp.ini
+    section: Xorg
+    option: '{{ item.o }}'
+    value: '{{ item.v }}'
+    no_extra_spaces: true
+    mode: 0644
+  loop:
+    - o: name
+      v: Xorg
+    - o: lib
+      v: libxup.so
+    - o: username
+      v: ask
+    - o: password
+      v: ask
+    - o: ip
+      v: 127.0.0.1
+    - o: port
+      v: '-1'
+    - o: code
+      v: '20'
+  register: xorg_config
+  when: not xrdp_server_tigervnc_enable
+
 - name: xrdp-config - remove unused options for xvnc
   ini_file:
     path: /etc/xrdp/xrdp.ini
@@ -122,6 +148,30 @@
     - vnc-any
     - Xorg
   register: remove_unused
+  when: xrdp_server_tigervnc_enable
+
+- name: xrdp-config - xvnc config
+  ini_file:
+    path: /etc/xrdp/xrdp.ini
+    section: Xvnc
+    option: '{{ item.o }}'
+    value: '{{ item.v }}'
+    no_extra_spaces: true
+    mode: 0644
+  loop:
+    - o: name
+      v: Xvnc
+    - o: lib
+      v: libvnc.so
+    - o: username
+      v: ask
+    - o: password
+      v: ask
+    - o: ip
+      v: 127.0.0.1
+    - o: port
+      v: '-1'
+  register: xvnc_config
   when: xrdp_server_tigervnc_enable
 
 - name: xrdp-config - remove unused options for xorgxrdp
@@ -168,5 +218,6 @@
       xrdp_server_restrict_outbound_clipboard_config is changed or
       xrdp_server_group_check_config is changed or
       xrdp_server_loglevel_config is changed or
-      remove_unused is changed
-
+      remove_unused is changed or
+      xorg_config is changed or
+      xvnc_config is changed

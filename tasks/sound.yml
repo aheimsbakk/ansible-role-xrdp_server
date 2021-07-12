@@ -1,5 +1,5 @@
 ---
-- name: sound - install build deps for xrdp sound
+- name: sound - debian - install build deps for xrdp sound
   apt:
     name:
       - build-essential
@@ -22,6 +22,6 @@
   when: pulseaudio_version.rc == 0
 
 - name: compile and install xrdp pulseaudio module
-  include: sound-source.yml
+  include: "sound-source-{{ ansible_os_family | lower }}.yml"
   when:
     - not module_previous_installed.stat.exists|default(false)
