@@ -8,7 +8,7 @@ Sets up desktop sharing with RDP. Install [neutrinolabs](https://github.com/neut
 
 ## Requirements
 
-* Fedora 34
+* Fedora 34, no sound
 * Ubuntu 20.04, Focal
 * Ubuntu 21.04, Hirsute
 * Ubuntu 21.10, Impish
