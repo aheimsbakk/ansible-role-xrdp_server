@@ -2,8 +2,13 @@
 
 Sets up desktop sharing with RDP. Install [neutrinolabs](https://github.com/neutrinolabs) XRDP server and a desktop environment.
 
+* Lock screen is disabled.
+* GUI options suspend is turned off.
+* Shutdown and reboot is disabled from GUI.
+
 ## Version
 
+* `1.0.0` --- Ubuntu works, Fedora works without sound
 * `main` --- latest development release, not for production
 
 ## Requirements
@@ -39,6 +44,10 @@ Security related.
 ## Dependencies
 
 None.
+
+## Todo
+
+* SSL.
 
 ## Example Playbook
 
