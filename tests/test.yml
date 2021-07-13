@@ -10,3 +10,4 @@
       xrdp_server_loglevel: debug
       xrdp_server_max_sessions: 25
       xrdp_server_sound_enable: true
+      xrdp_server_tigervnc_enable: false
