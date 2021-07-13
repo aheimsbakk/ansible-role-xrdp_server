@@ -1,0 +1,47 @@
+---
+- name: redhat - turn on unattended upgrades
+  dnf:
+    name: dnf-automatic
+
+# - name: redhat - enable dnf automatic
+#   ini_file:
+#     path: :
+
+- name: redhat - install tigervnc
+  dnf:
+    name:
+      - tigervnc-server-minimal
+  when: xrdp_server_tigervnc_enable
+
+- name: redhat - install xrdp
+  dnf:
+    name:
+      - xorgxrdp
+      - xrdp
+      - xrdp-selinux
+
+- name: redhat - install gnome desktop
+  dnf:
+    name: "@workstation-product-environment"
+  when: xrdp_server_desktop_environment == "gnome"
+
+- name: redhat - remove pcsc-lite
+  dnf:
+    name: pcsc-lite
+    state: absent
+
+- name: redhat - enable xrdp on boot
+  systemd:
+    name: xrdp.service
+    enabled: true
+
+- name: redhat - stop gdm
+  systemd:
+    name: gdm
+    state: stopped
+
+- name: redhat - disable gdm
+  systemd:
+    name: gdm
+    enabled: false
+  changed_when: false                  # workaround

@@ -1,7 +1,0 @@
----
-- name: install xrdp
-  apt:
-    name:
-      - xrdp
-    cache_valid_time: 3600
-    update_cache: true

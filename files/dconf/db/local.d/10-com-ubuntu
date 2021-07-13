@@ -1,0 +1,8 @@
+#
+# Don't show crash reports, and turn off update notifier updates
+#
+
+[com/ubuntu/update-notifier]
+show-apport-crashes = false
+no-show-notifications = true
+

@@ -1,0 +1,102 @@
+---
+
+- name: xrdp-source - install build dependencies
+  apt:
+    name:
+      - autoconf
+      - automake
+      - pkgconf
+      - make
+
+# xrdp
+
+- name: xrdp-source - xrdp build dependencies
+  apt:
+    name:
+      - libjpeg-dev
+      - checkinstall
+      - libfdkaac-ocaml-dev
+      - libfuse-dev
+      - libmp3lame-dev
+      - libpam-dev
+      - libssl-dev
+      - libtool
+      - libturbojpeg0-dev
+      - libx11-dev
+      - libxfixes-dev
+      - libxrandr-dev
+      - nasm
+
+- name: xrdp-source - download xrdp source
+  git:
+    repo: '{{ xrdp_server_xrdp_git_repo }}'
+    dest: /opt/xrdp/xrdp
+    version: '{{ xrdp_server_xrdp_source_version }}'
+    recursive: true
+
+- name: xrdp-compile - check if we have xrdp source
+  stat:
+    path: /opt/xrdp/xrdp
+  register: xrdp_directory
+
+- name: xrdp-compile - make and install xrdp
+  command: '{{ item }}'
+  args:
+    chdir: /opt/xrdp/xrdp
+  when: xrdp_directory.stat.exists
+  loop:
+    - ./bootstrap
+    - ./configure --enable-fuse --enable-rfxcodec --enable-jpeg
+    - make -j 2
+    - 'checkinstall --pkgname=xrdp --pkgversion={{ xrdp_server_xrdp_source_version }} --pkgrelease=1 --default'
+
+# xorgxrdp
+
+- name: xrdp-source - xorgxrdp build dependencies
+  apt:
+    name:
+      - xserver-xorg-dev
+
+- name: xrdp-source - download xorgxrdp source
+  git:
+    repo: '{{ xrdp_server_xrdp_xorgxrdp_git_repo }}'
+    dest: /opt/xrdp/xorgxrdp
+    version: '{{ xrdp_server_xrdp_xorgxrdp_source_version }}'
+
+- name: xrdp-compile - check if we have xorgxrdp source
+  stat:
+    path: /opt/xrdp/xorgxrdp
+  register: xorgxrdp_directory
+
+- name: xrdp-compile - make and install xorgxrdp
+  command: '{{ item }}'
+  args:
+    chdir: /opt/xrdp/xorgxrdp
+  when: xorgxrdp_directory.stat.exists
+  loop:
+    - ./bootstrap
+    - ./configure
+    - make -j 2
+    - 'checkinstall --pkgname=xorgxrdp --pkgversion={{ xrdp_server_xrdp_xorgxrdp_source_version }} --pkgrelease=1 --default'
+
+# enable and start services
+
+- name: xrdp-compile - reload systemd
+  systemd:
+    daemon_reload: true
+
+- name: xrdp-compile - enable services
+  systemd:
+    name: '{{ item }}'
+    enabled: true
+  loop:
+    - xrdp
+    - xrdp-sesman
+
+- name: xrdp-compile - enable services
+  systemd:
+    name: '{{ item }}'
+    state: started
+  loop:
+    - xrdp
+    - xrdp-sesman
